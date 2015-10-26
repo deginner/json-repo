@@ -1,0 +1,730 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "3.0.1",
+        "title": "Crypto Capital API",
+        "description": "An API for cryptocapital.co using Swagger 2.0 and bitjws. Swagger is an API description tool, which allow Crypto Capitl clients to be self-programming. Bitjws is an authentication tool using Bitcoin's message signing and JWS.",
+        "termsOfService": "https://cryptocapital.co/terms/",
+        "contact": {
+            "name": "Crypto Capital",
+            "url": "https://cryptocapital.co"
+        },
+        "license": {
+            "name": "Creative Commons 4.0 International",
+            "url": "http://creativecommons.org/licenses/by/4.0/"
+        }
+    },
+    "host": "api.cryptocapital.co",
+    "basePath": "/3/",
+    "schemes": [
+        "https"
+    ],
+    "consumes": [
+        "application/jose"
+    ],
+    "produces": [
+        "application/jose"
+    ],
+    "securityDefinitions": {
+        "kid": {
+            "type": "apiKey",
+            "in": "query",
+            "name": "kid",
+            "description": "The JWS key"
+        },
+        "typ": {
+            "type": "apiKey",
+            "in": "query",
+            "name": "typ",
+            "description": "The message type"
+        },
+        "alg": {
+            "type": "apiKey",
+            "in": "query",
+            "name": "alg",
+            "description": "The signing algorithm to use i.e. \"CUSTOM-BITCOIN-SIGN\""
+        }
+    },
+    "security": [
+        {
+            "kid": []
+        },
+        {
+            "typ": []
+        },
+        {
+            "alg": []
+        }
+    ],
+    "paths": {
+        "/account": {
+            "get": {
+                "description": "get a single Crypto Capital account.",
+                "operationId": "getAccount",
+                "produces": [
+                    "application/jose"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "account response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Account"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "kid": []
+                    },
+                    {
+                        "typ": []
+                    },
+                    {
+                        "alg": []
+                    }
+                ]
+            }
+        },
+        "/account_verifiy": {
+            "get": {
+                "description": "Validate the existence and currency of an account.",
+                "operationId": "verifyAccount",
+                "produces": [
+                    "application/jose"
+                ],
+                "parameters": [
+                    {
+                        "name": "account_verify",
+                        "in": "body",
+                        "description": "Validate the existence and currency of an account.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/AccountVerify"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "coin response",
+                        "schema": {
+                            "$ref": "#/definitions/AccountVerify"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "kid": []
+                    },
+                    {
+                        "typ": []
+                    },
+                    {
+                        "alg": []
+                    }
+                ]
+            }
+        },
+        "/statement/": {
+            "post": {
+                "description": "Get a Crypto Capital account statement.",
+                "operationId": "getStatement",
+                "produces": [
+                    "application/jose",
+                ],
+                "parameters": [
+                    {
+                        "name": "statement_request",
+                        "in": "body",
+                        "description": "Statement request",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/StatementRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get statement response",
+                        "schema": {
+                            "$ref": "#/definitions/Statement"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "kid": []
+                    },
+                    {
+                        "typ": []
+                    },
+                    {
+                        "alg": []
+                    }
+                ]
+            },
+        }, "/statement/{statementid}": {
+            "get": {
+                "description": "Get a Crypto Capital account statement.",
+                "operationId": "getStatementById",
+                "produces": [
+                    "application/jose",
+                ],
+                "parameters": [
+                    {
+                        "name": "statementid",
+                        "in": "path",
+                        "description": "ID of statement to fetch",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get statement response",
+                        "schema": {
+                            "$ref": "#/definitions/Statement"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "kid": []
+                    },
+                    {
+                        "typ": []
+                    },
+                    {
+                        "alg": []
+                    }
+                ]
+            },
+        }, "/transfer/": {
+            "post": {
+                "description": "Create a Crypto Capital transfer.",
+                "operationId": "transfer",
+                "produces": [
+                    "application/jose",
+                ],
+                "parameters": [
+                    {
+                        "name": "transfer_request",
+                        "in": "body",
+                        "description": "Transfer request",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TransferRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "create trasnfer response",
+                        "schema": {
+                            "$ref": "#/definitions/Transfer"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "kid": []
+                    },
+                    {
+                        "typ": []
+                    },
+                    {
+                        "alg": []
+                    }
+                ]
+            },
+            "get": {
+                "description": "Get a Crypto Capital transfer.",
+                "operationId": "getTransfer",
+                "produces": [
+                    "application/jose",
+                ],
+                "parameters": [
+                    {
+                        "name": "transfer",
+                        "in": "body",
+                        "description": "Transfer",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Transfer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get transfer response",
+                        "schema": {
+                            "$ref": "#/definitions/Transfer"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "kid": []
+                    },
+                    {
+                        "typ": []
+                    },
+                    {
+                        "alg": []
+                    }
+                ]
+            },
+        },
+        "/user": {
+            "get": {
+                "description": "get your user record",
+                "operationId": "getUserList",
+                "produces": [
+                    "application/jose"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "user response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/user"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "kid": []
+                    },
+                    {
+                        "typ": []
+                    },
+                    {
+                        "alg": []
+                    }
+                ]
+            },
+            "post": {
+                "description": "Register a new User.",
+                "operationId": "addUser",
+                "produces": [
+                    "application/jose"
+                ],
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "A new User to add",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "user response",
+                        "schema": {
+                            "$ref": "#/definitions/user"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "kid": []
+                    },
+                    {
+                        "typ": []
+                    },
+                    {
+                        "alg": []
+                    }
+                ]
+            }
+        },
+        "/user/{id}": {
+            "get": {
+                "description": "Returns a user based on a single ID",
+                "operationId": "findUserById",
+                "produces": [
+                    "application/jose"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of user to fetch",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "user response",
+                        "schema": {
+                            "$ref": "#/definitions/user"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "kid": []
+                    },
+                    {
+                        "typ": []
+                    },
+                    {
+                        "alg": []
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "user": {
+            "type": "object",
+            "required": [
+                "address",
+                "username"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "Account": {
+          "description": "A single Crypto Capital account.", 
+          "required": [
+            "name", 
+            "currency", 
+          ], 
+          "type": "object", 
+          "properties": {
+            "id": {
+              "type": "string", 
+              "description": "primary key", 
+              "maxLength": 255
+            },
+            "customerId": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "accountNumber": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "name": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "date": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "currency": {
+              "type": "string", 
+              "maxLength": 3
+            }, 
+            "balance": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "available": {
+              "type": "string", 
+              "maxLength": 255
+            }
+          }, 
+          "title": "Account"
+        }, "AccountVerify": {
+          "description": "A single Crypto Capital account.", 
+          "required": [
+            "id", 
+            "currency"
+          ], 
+          "type": "object", 
+          "properties": {
+            "id": {
+              "type": "string", 
+              "description": "primary key", 
+              "maxLength": 255
+            }, 
+            "accountNumber": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "currency": {
+              "type": "string", 
+              "maxLength": 3
+            }
+          }, 
+          "title": "AccountVerify"
+        }, "Statement": {
+          "description": "A Crypto Capital account statement.", 
+          "title": "Statement", 
+          "required": [
+            "transactionId", 
+            "accountNumber", 
+            "beneficiaryId", 
+            "beneficiaryName", 
+            "currency", 
+            "amount", 
+            "narrative", 
+            "date", 
+            "status"
+          ],
+          "type": "object", 
+          "properties": {
+            "id": {
+              "type": "integer", 
+              "description": "primary key"
+            }, 
+            "customerId": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "transactionId": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "customerName": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "accountNumber": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "beneficiaryId": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "beneficiaryName": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "currency": {
+              "type": "string", 
+              "maxLength": 3
+            }, 
+            "amount": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "narrative": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "date": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "reference": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "status": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "statement_request": {
+              "$ref": "#/definitions/StatementRequest"
+            }
+          }
+        }, "StatementRequest": {
+          "description": "A request to get a Crypto Capital statement", 
+          "required": [
+            "id", 
+            "customerId", 
+            "accountNumber", 
+            "limit"
+          ], 
+          "type": "object", 
+          "properties": {
+            "id": {
+              "type": "integer", 
+              "description": "primary key"
+            }, 
+            "customerId": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "accountNumber": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "fromtime": {
+              "type": "integer"
+            }, 
+            "totime": {
+              "type": "integer"
+            }, 
+            "transactionid": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "limit": {
+              "type": "integer"
+            }
+          }, 
+          "title": "StatementRequest"
+        }, "TransferRequest": {
+          "description": "A request to send a Crypto Capital transfer", 
+          "required": [
+            "id", 
+            "customerId", 
+            "accountNumber", 
+            "beneficiary", 
+            "currency", 
+            "amount", 
+            "narrative", 
+            "reference"
+          ], 
+          "type": "object", 
+          "properties": {
+            "id": {
+              "type": "integer", 
+              "description": "primary key"
+            }, 
+            "customerId": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "accountNumber": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "beneficiary": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "currency": {
+              "type": "string", 
+              "maxLength": 3
+            }, 
+            "amount": {
+              "type": "number"
+            }, 
+            "narrative": {
+              "type": "string", 
+              "maxLength": 64
+            }, 
+            "reference": {
+              "type": "string", 
+              "maxLength": 255
+            }
+          }, 
+          "title": "TransferRequest"
+        }, "Transfer": {
+          "description": "A Crypto Capital account transfer.", 
+          "title": "Transfer", 
+          "required": [
+            "id", 
+            "statusCode", 
+            "description"
+          ],
+          "type": "object", 
+          "properties": {
+            "id": {
+              "type": "integer", 
+              "description": "primary key"
+            }, 
+            "statusCode": {
+              "type": "integer"
+            }, 
+            "description": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "errorMessage": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "transfer_request": {
+              "$ref": "#/definitions/TransferRequest"
+            }
+          }
+        }, "errorModel": {
+            "type": "object",
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
