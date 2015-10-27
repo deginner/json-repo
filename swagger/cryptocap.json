@@ -1,13 +1,13 @@
 {
     "swagger": "2.0",
     "info": {
-        "version": "0.0.0",
+        "version": "3.0.1",
         "title": "Crypto Capital API",
-        "description": "An API for cryptocapital.co using Swagger 2.0 and bitjws. Swagger is an API description tool, which allow Crypto Capitl clients to be self-programming. Bitjws is an authentication tool using Bitcoin's message signing and JWS.",
+        "description": "An API for cryptocapital.co using Swagger 2.0 and bitjws. Swagger is an API description tool, which allow Crypto Capital clients to be self-programming. Bitjws is an authentication tool using Bitcoin's message signing and JWS. For Python it is recommended to use Deginner's bravado-bitjws client. Javascript client coming soon.",
         "termsOfService": "http://cryptocapital.co/terms/",
         "contact": {
             "name": "Crypto Capital",
-            "url": "http://cryptocapital.co"
+            "url": "https://cryptocapital.co"
         },
         "license": {
             "name": "Creative Commons 4.0 International",
@@ -59,20 +59,28 @@
     ],
     "paths": {
         "/account": {
-            "get": {
-                "description": "get a single Crypto Capital account.",
+            "post": {
+                "description": "get a single Crypto Capital account by id.",
                 "operationId": "getAccount",
                 "produces": [
                     "application/jose"
+                ],
+                "parameters": [
+                    {
+                        "name": "account",
+                        "in": "body",
+                        "description": "The account id to get",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/RequestByID"
+                        }
+                    }
                 ],
                 "responses": {
                     "200": {
                         "description": "account response",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Account"
-                            }
+                            "$ref": "#/definitions/Account"
                         }
                     },
                     "default": {
@@ -95,18 +103,18 @@
                 ]
             }
         },
-        "/account_verifiy": {
-            "get": {
-                "description": "Validate the existence and currency of an account.",
+        "/verify_account": {
+            "post": {
+                "description": "Verify the existence and currency of an account. (requires permission)",
                 "operationId": "verifyAccount",
                 "produces": [
                     "application/jose"
                 ],
                 "parameters": [
                     {
-                        "name": "account_verify",
+                        "name": "AccountInfo",
                         "in": "body",
-                        "description": "Validate the existence and currency of an account.",
+                        "description": "The account info to verify",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/AccountVerify"
@@ -115,13 +123,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "coin response",
-                        "schema": {
-                            "$ref": "#/definitions/AccountVerify"
-                        }
+                        "description": "account info verified"
                     },
                     "default": {
-                        "description": "unexpected error",
+                        "description": "Unable to verify account info",
                         "schema": {
                             "$ref": "#/definitions/errorModel"
                         }
@@ -140,9 +145,9 @@
                 ]
             }
         },
-        "/statement/": {
+        "/statement": {
             "post": {
-                "description": "Get a Crypto Capital account statement.",
+                "description": "Get a Crypto Capital account statement. A statement is a list of transactions. To get a single transaction, provide a transactionid.",
                 "operationId": "getStatement",
                 "produces": [
                     "application/jose"
@@ -184,53 +189,10 @@
                     }
                 ]
             }
-        }, "/statement/{statementid}": {
-            "get": {
-                "description": "Get a Crypto Capital account statement.",
-                "operationId": "getStatementById",
-                "produces": [
-                    "application/jose"
-                ],
-                "parameters": [
-                    {
-                        "name": "statementid",
-                        "in": "path",
-                        "description": "ID of statement to fetch",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int64"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "get statement response",
-                        "schema": {
-                            "$ref": "#/definitions/Statement"
-                        }
-                    },
-                    "default": {
-                        "description": "unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/errorModel"
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "kid": []
-                    },
-                    {
-                        "typ": []
-                    },
-                    {
-                        "alg": []
-                    }
-                ]
-            }
-        }, "/transfer/": {
+        }, "/transfer": {
             "post": {
-                "description": "Create a Crypto Capital transfer.",
-                "operationId": "transfer",
+                "description": "Request to make a new Crypto Capital transfer to the beneficiary specified. A positive response means that your transfer has been successfully submitted to the banking backend. It does not mean the transfer was approved.",
+                "operationId": "makeTransfer",
                 "produces": [
                     "application/jose"
                 ],
@@ -238,7 +200,7 @@
                     {
                         "name": "transfer_request",
                         "in": "body",
-                        "description": "Transfer request",
+                        "description": "The transfer request",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/TransferRequest"
@@ -247,89 +209,9 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "create transfer response",
+                        "description": "make transfer response",
                         "schema": {
-                            "$ref": "#/definitions/Transfer"
-                        }
-                    },
-                    "default": {
-                        "description": "unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/errorModel"
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "kid": []
-                    },
-                    {
-                        "typ": []
-                    },
-                    {
-                        "alg": []
-                    }
-                ]
-            },
-            "get": {
-                "description": "Get a Crypto Capital transfer.",
-                "operationId": "getTransfer",
-                "produces": [
-                    "application/jose"
-                ],
-                "parameters": [
-                    {
-                        "name": "transfer",
-                        "in": "body",
-                        "description": "Transfer",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Transfer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "get transfer response",
-                        "schema": {
-                            "$ref": "#/definitions/Transfer"
-                        }
-                    },
-                    "default": {
-                        "description": "unexpected error",
-                        "schema": {
-                            "$ref": "#/definitions/errorModel"
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "kid": []
-                    },
-                    {
-                        "typ": []
-                    },
-                    {
-                        "alg": []
-                    }
-                ]
-            }
-        },
-        "/user": {
-            "get": {
-                "description": "get your user record",
-                "operationId": "getUserList",
-                "produces": [
-                    "application/jose"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "user response",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/user"
-                            }
+                            "$ref": "#/definitions/TransferResponse"
                         }
                     },
                     "default": {
@@ -354,24 +236,19 @@
         }
     },
     "definitions": {
-        "user": {
+        "RequestByID": {
+            "description": "A request to get a resource by integer id.",
             "type": "object",
             "required": [
-                "address",
-                "username"
+                "id"
             ],
             "properties": {
                 "id": {
                     "type": "integer",
                     "format": "int64"
-                },
-                "address": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
                 }
-            }
+            },
+            "title": "RequestByID"
         },
         "Account": {
           "description": "A single Crypto Capital account.", 
@@ -417,18 +294,13 @@
           }, 
           "title": "Account"
         }, "AccountVerify": {
-          "description": "A single Crypto Capital account.", 
+          "description": "Verification info for a Crypto Capital account.", 
           "required": [
-            "id", 
+            "accountNumber", 
             "currency"
           ], 
           "type": "object", 
           "properties": {
-            "id": {
-              "type": "string", 
-              "description": "primary key", 
-              "maxLength": 255
-            }, 
             "accountNumber": {
               "type": "string", 
               "maxLength": 255
@@ -440,84 +312,33 @@
           }, 
           "title": "AccountVerify"
         }, "Statement": {
-          "description": "A Crypto Capital account statement.", 
+          "description": "A Crypto Capital account statement. A list of transactions.", 
           "title": "Statement", 
           "required": [
-            "transactionId", 
-            "accountNumber", 
-            "beneficiaryId", 
-            "beneficiaryName", 
-            "currency", 
-            "amount", 
-            "narrative", 
-            "date", 
-            "status"
+            "transactions",
+            "statusCode"
           ],
           "type": "object", 
           "properties": {
             "id": {
               "type": "integer", 
               "description": "primary key"
+            },
+            "transactions": {
+              "type": "array",
+              "items": {
+                  "$ref": "#/definitions/Transfer"
+              }
             }, 
-            "customerId": {
-              "type": "string", 
-              "maxLength": 255
-            }, 
-            "transactionId": {
-              "type": "string", 
-              "maxLength": 255
-            }, 
-            "customerName": {
-              "type": "string", 
-              "maxLength": 255
-            }, 
-            "accountNumber": {
-              "type": "string", 
-              "maxLength": 255
-            }, 
-            "beneficiaryId": {
-              "type": "string", 
-              "maxLength": 255
-            }, 
-            "beneficiaryName": {
-              "type": "string", 
-              "maxLength": 255
-            }, 
-            "currency": {
-              "type": "string", 
-              "maxLength": 3
-            }, 
-            "amount": {
-              "type": "string", 
-              "maxLength": 255
-            }, 
-            "narrative": {
-              "type": "string", 
-              "maxLength": 255
-            }, 
-            "date": {
-              "type": "string", 
-              "maxLength": 255
-            }, 
-            "reference": {
-              "type": "string", 
-              "maxLength": 255
-            }, 
-            "status": {
-              "type": "string", 
-              "maxLength": 255
-            }, 
-            "statement_request": {
-              "$ref": "#/definitions/StatementRequest"
+            "statusCode": {
+              "type": "integer"
             }
           }
         }, "StatementRequest": {
-          "description": "A request to get a Crypto Capital statement", 
+          "description": "A request to get a Crypto Capital statement.", 
           "required": [
-            "id", 
-            "customerId", 
-            "accountNumber", 
-            "limit"
+            "customerId",
+            "accountNumber"
           ], 
           "type": "object", 
           "properties": {
@@ -549,9 +370,8 @@
           }, 
           "title": "StatementRequest"
         }, "TransferRequest": {
-          "description": "A request to send a Crypto Capital transfer", 
+          "description": "A request to send a Crypto Capital transfer. Reference is like a nonce; it should be a unique string.", 
           "required": [
-            "id", 
             "customerId", 
             "accountNumber", 
             "beneficiary", 
@@ -595,20 +415,16 @@
             }
           }, 
           "title": "TransferRequest"
-        }, "Transfer": {
-          "description": "A Crypto Capital account transfer.", 
-          "title": "Transfer", 
+        }, "TransferResponse": {
+          "description": "A Crypto Capital account transfer response. Does not indicate success or failure of transfer itself, but whether request for the transfer was successfully made or not. A successCode == 0 and description == \"Success\" means the transfer request was made.", 
+          "title": "TransferResponse", 
           "required": [
-            "id", 
             "statusCode", 
-            "description"
+            "description",
+            "errorMessage"
           ],
           "type": "object", 
           "properties": {
-            "id": {
-              "type": "integer", 
-              "description": "primary key"
-            }, 
             "statusCode": {
               "type": "integer"
             }, 
@@ -619,12 +435,75 @@
             "errorMessage": {
               "type": "string", 
               "maxLength": 255
-            }, 
-            "transfer_request": {
-              "$ref": "#/definitions/TransferRequest"
             }
           }
-        }, "errorModel": {
+        }, "Transfer": {
+          "description": "A Crypto Capital account transfer. Your account could be either the beneficiary (recipient) or the customer (sender).",
+          "title": "Transfer", 
+          "required": [
+            "customerId",
+            "customerName", 
+            "accountNumber",
+            "beneficiaryId",
+            "beneficiaryName",
+            "currency",
+            "amount",
+            "status",
+            "narrative",
+            "date",
+            "reference"
+          ],
+          "type": "object",
+          "properties": {
+             "transactionId": {
+              "type": "string", 
+              "maxLength": 16
+            },
+            "customerId": {
+              "type": "string", 
+              "maxLength": 16
+            }, 
+            "customerName": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "accountNumber": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "beneficiaryId": {
+              "type": "string", 
+              "maxLength": 16
+            }, 
+            "beneficiaryName": {
+              "type": "string", 
+              "maxLength": 255
+            },
+            "currency": {
+              "type": "string", 
+              "maxLength": 3
+            }, 
+            "amount": {
+              "type": "number"
+            }, 
+            "status": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "narrative": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "date": {
+              "type": "string", 
+              "maxLength": 255
+            }, 
+            "reference": {
+              "type": "string", 
+              "maxLength": 255
+            }
+          }
+         }, "errorModel": {
             "type": "object",
             "required": [
                 "code",
