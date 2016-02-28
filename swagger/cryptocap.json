@@ -30,7 +30,7 @@
                         }
                     }
                 },
-                "description": "A statement is a list of transactions.<br/>To get a single transaction, provide a transactionid.",
+                "description": "A statement is a list of transactions.\\nTo get a single transaction, provide a transactionid.",
                 "parameters": [
                     {
                         "required": true,
@@ -73,7 +73,7 @@
                         }
                     }
                 },
-                "description": "A callback is a URL where a customer can receive notifications of bank<br/>transfers from/to the customer's account.<br/>Notifications will use POST and will be signed by the server's bitjws key.",
+                "description": "A callback is a URL where a customer can receive notifications of bank\\ntransfers from/to the customer's account.\\nNotifications will use POST and will be signed by the server's bitjws key.",
                 "parameters": [
                     {
                         "required": true,
@@ -135,7 +135,7 @@
         },
         "/transfer": {
             "post": {
-                "description": "Request to make a new Crypto Capital transfer to the beneficiary specified.<br/>A positive response means that your transfer has been successfully submitted <br/>to the banking backend. It does not mean the transfer was approved.<br/>To specify a different currency for the beneficiary to receive in,<br/>include a 'transfercurrency'.<br/>WARNING: A spread is applied for foreign exchange transfers.",
+                "description": "Request to make a new Crypto Capital transfer to the beneficiary specified.\\nA positive response means that your transfer has been successfully submitted \\nto the banking backend. It does not mean the transfer was approved.\\nTo specify a different currency for the beneficiary to receive in,\\ninclude a 'transfercurrency'.\\nWARNING: A spread is applied for foreign exchange transfers.",
                 "parameters": [
                     {
                         "required": true,
@@ -195,7 +195,7 @@
                         }
                     }
                 },
-                "description": "Currently no other search parameters are supported.<br/>Users can only get their own accounts.",
+                "description": "Currently no other search parameters are supported.\\nUsers can only get their own accounts.",
                 "parameters": [
                     {
                         "required": true,
