@@ -85,7 +85,7 @@
                         }
                     }
                 ], 
-                "summary": "Set a callback url for a user.", 
+                "summary": "Set the callback url for a user.", 
                 "security": [
                     {
                         "kid": []
@@ -116,12 +116,12 @@
                         }
                     }
                 }, 
-                "description": "estimate of the rate that would apply if an FX transfer were made.", 
+                "description": "The returned rate is only an <br/>estimate of the rate that would apply if an FX transfer were made.", 
                 "parameters": [
                     {
                         "required": true, 
                         "type": "string", 
-                        "description": "The six letter market represending two currencies. i.e. USDEUR", 
+                        "description": "The six letter market representing two currencies. i.e. USDEUR", 
                         "in": "path", 
                         "name": "market"
                     }
@@ -129,7 +129,7 @@
                 "produces": [
                     "application/json"
                 ], 
-                "summary": "Get an exchange rate, as a bid and ask. The returned rate is only an ", 
+                "summary": "Get an exchange rate, as a bid and ask.", 
                 "operationId": "getRate"
             }
         }, 
@@ -254,13 +254,6 @@
     "host": "0.0.0.0:8002", 
     "definitions": {
         "TransferResponse": {
-            "description": "A Crypto Capital account transfer response. Does not indicate success or failure of transfer itself, but whether request for the transfer was successfully made or not. A successCode == 0 and description == \"Success\" means the transfer request was made.", 
-            "required": [
-                "statusCode", 
-                "description", 
-                "errorMessage"
-            ], 
-            "type": "object", 
             "properties": {
                 "errorMessage": {
                     "type": "string", 
@@ -274,6 +267,13 @@
                     "type": "integer"
                 }
             }, 
+            "required": [
+                "statusCode", 
+                "description", 
+                "errorMessage"
+            ], 
+            "type": "object", 
+            "description": "A Crypto Capital account transfer response. Does not indicate success or failure of transfer itself, but whether request for the transfer was successfully made or not. A successCode == 0 and description == \"Success\" means the transfer request was made.", 
             "title": "TransferResponse"
         }, 
         "Account": {
@@ -283,6 +283,7 @@
                 "currency"
             ], 
             "type": "object", 
+            "description": "A single Crypto Capital account.", 
             "properties": {
                 "available": {
                     "type": "string", 
@@ -317,8 +318,7 @@
                     "description": "primary key", 
                     "maxLength": 255
                 }
-            }, 
-            "description": "A single Crypto Capital account."
+            }
         }, 
         "errorModel": {
             "required": [
@@ -341,30 +341,15 @@
                 "id"
             ], 
             "type": "object", 
+            "description": "A request to get a resource by integer id.", 
             "properties": {
                 "id": {
                     "type": "integer", 
                     "format": "int64"
                 }
-            }, 
-            "description": "A request to get a resource by integer id."
+            }
         }, 
         "Transfer": {
-            "description": "A Crypto Capital account transfer. Your account could be either the beneficiary (recipient) or the customer (sender).", 
-            "required": [
-                "customerId", 
-                "customerName", 
-                "accountNumber", 
-                "beneficiaryId", 
-                "beneficiaryName", 
-                "currency", 
-                "amount", 
-                "status", 
-                "narrative", 
-                "date", 
-                "reference"
-            ], 
-            "type": "object", 
             "properties": {
                 "status": {
                     "type": "string", 
@@ -374,10 +359,6 @@
                     "type": "string", 
                     "maxLength": 255
                 }, 
-                "transactionId": {
-                    "type": "string", 
-                    "maxLength": 16
-                }, 
                 "customerName": {
                     "type": "string", 
                     "maxLength": 255
@@ -385,6 +366,10 @@
                 "reference": {
                     "type": "string", 
                     "maxLength": 255
+                }, 
+                "beneficiaryId": {
+                    "type": "string", 
+                    "maxLength": 16
                 }, 
                 "accountNumber": {
                     "type": "string", 
@@ -405,7 +390,7 @@
                     "type": "string", 
                     "maxLength": 255
                 }, 
-                "beneficiaryId": {
+                "transactionId": {
                     "type": "string", 
                     "maxLength": 16
                 }, 
@@ -414,6 +399,21 @@
                     "maxLength": 16
                 }
             }, 
+            "required": [
+                "customerId", 
+                "customerName", 
+                "accountNumber", 
+                "beneficiaryId", 
+                "beneficiaryName", 
+                "currency", 
+                "amount", 
+                "status", 
+                "narrative", 
+                "date", 
+                "reference"
+            ], 
+            "type": "object", 
+            "description": "A Crypto Capital account transfer. Your account could be either the beneficiary (recipient) or the customer (sender).", 
             "title": "Transfer"
         }, 
         "TransferRequest": {
@@ -428,6 +428,7 @@
                 "reference"
             ], 
             "type": "object", 
+            "description": "A request to send a Crypto Capital transfer. Reference is like a nonce; it should be a unique string.", 
             "properties": {
                 "transfercurrency": {
                     "type": "string", 
@@ -453,10 +454,6 @@
                     "type": "string", 
                     "maxLength": 3
                 }, 
-                "transfercurrency": {
-                    "type": "string", 
-                    "maxLength": 3
-                }, 
                 "amount": {
                     "type": "number"
                 }, 
@@ -468,8 +465,7 @@
                     "type": "integer", 
                     "description": "primary key"
                 }
-            }, 
-            "description": "A request to send a Crypto Capital transfer. Reference is like a nonce; it should be a unique string."
+            }
         }, 
         "Callback": {
             "title": "Callback", 
@@ -477,7 +473,6 @@
                 "callback_url"
             ], 
             "type": "object", 
-            "description": "API user's callback URLs.", 
             "properties": {
                 "callback_url": {
                     "type": "string", 
@@ -490,9 +485,15 @@
                 "user": {
                     "$ref": "#/definitions/User"
                 }
-            }
+            }, 
+            "description": "API user's callback URLs."
         }, 
         "User": {
+            "description": "A User", 
+            "required": [
+                "username"
+            ], 
+            "type": "object", 
             "properties": {
                 "username": {
                     "type": "string", 
@@ -511,20 +512,9 @@
                     "format": "date-time"
                 }
             }, 
-            "required": [
-                "username"
-            ], 
-            "type": "object", 
-            "description": "A User", 
             "title": "User"
         }, 
         "Statement": {
-            "description": "A Crypto Capital account statement. A list of transactions.", 
-            "required": [
-                "transactions", 
-                "statusCode"
-            ], 
-            "type": "object", 
             "properties": {
                 "statusCode": {
                     "type": "integer"
@@ -540,6 +530,12 @@
                     "type": "array"
                 }
             }, 
+            "required": [
+                "transactions", 
+                "statusCode"
+            ], 
+            "type": "object", 
+            "description": "A Crypto Capital account statement. A list of transactions.", 
             "title": "Statement"
         }, 
         "ExchangeRate": {
@@ -549,6 +545,7 @@
                 "ask"
             ], 
             "type": "object", 
+            "description": "An exchange rate for a single market pair, as a snapshot in time.", 
             "properties": {
                 "ask": {
                     "type": "number"
@@ -564,8 +561,7 @@
                     "type": "string", 
                     "format": "date-time"
                 }
-            }, 
-            "description": "An exchange rate for a single market pair, as a snapshot in time."
+            }
         }, 
         "UserKey": {
             "title": "UserKey", 
@@ -574,6 +570,7 @@
                 "keytype"
             ], 
             "type": "object", 
+            "description": "A User's API key", 
             "properties": {
                 "deactivated_at": {
                     "type": "string", 
@@ -608,8 +605,7 @@
                     "type": "string", 
                     "format": "date-time"
                 }
-            }, 
-            "description": "A User's API key"
+            }
         }, 
         "AccountVerify": {
             "title": "AccountVerify", 
@@ -618,6 +614,7 @@
                 "currency"
             ], 
             "type": "object", 
+            "description": "Verification info for a Crypto Capital account.", 
             "properties": {
                 "currency": {
                     "type": "string", 
@@ -627,8 +624,7 @@
                     "type": "string", 
                     "maxLength": 255
                 }
-            }, 
-            "description": "Verification info for a Crypto Capital account."
+            }
         }, 
         "StatementRequest": {
             "title": "StatementRequest", 
@@ -637,6 +633,7 @@
                 "accountNumber"
             ], 
             "type": "object", 
+            "description": "A request to get a Crypto Capital statement.", 
             "properties": {
                 "accountNumber": {
                     "type": "string", 
@@ -663,8 +660,7 @@
                     "type": "integer", 
                     "description": "primary key"
                 }
-            }, 
-            "description": "A request to get a Crypto Capital statement."
+            }
         }
     }, 
     "security": [
