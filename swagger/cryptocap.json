@@ -2,8 +2,6 @@
     "info": {
         "termsOfService": "http://cryptocapital.co/terms/", 
         "description": "
-        # Crypto Capital API Home
-
             Welcome to the Crypto Capital API v3 documentation. For the v2 API docs, please see the [legacy github repository](https://github.com/cryptocap/cryptocap-api).
 
             Version 3 of Crypto Capital's API uses [Swagger 2.0](http://swagger.io/) API specification and [bitjws](https://github.com/deginner/bitjws) authentication.
